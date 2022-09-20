@@ -9,6 +9,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using NPOI.XWPF.UserModel;
+
 using Utils;
 
 namespace genChkReport
@@ -76,10 +78,10 @@ namespace genChkReport
 			//excel_files = excel_files.Union(Utils.FIO.traverseSearchFile_Ext(input_dir, "xlsx")).ToList<string>();
 
 			foreach (string f in excel_files)
-				getExcelData(f);
+				genReport(f, output_dir);
 		}
 
-		void getExcelData(string f)
+		void genReport(string f, string odir)
 		{
 			string[] lines = File.ReadAllLines(f,Encoding.GetEncoding("gb2312"));
 			if (lines.Length <= 1)
@@ -171,6 +173,16 @@ namespace genChkReport
 
 				string mark = fields[mark_idx];
 				string rank = fields[rank_idx];
+
+				string ofname_1 = Path.Combine(odir, mapno + "一级检查记录.docx");
+				string ofname_2 = Path.Combine(odir, mapno + "二级检查记录.docx");
+
+				File.Copy("tmplete1.docx", ofname_1, true);
+				File.Copy("tmplete2.docx", ofname_2, true);
+
+				FileStream fs1 = new FileStream(ofname_1, FileMode.Open, FileAccess.ReadWrite);
+				XWPFDocument doc1 = new XWPFDocument(fs1);
+				var tbl1 = doc1.Tables[0];
 			}
 		}
 	}
